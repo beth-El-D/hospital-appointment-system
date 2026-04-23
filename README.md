@@ -23,12 +23,7 @@ npm run dev
 Frontend: http://localhost:5173
 Backend: http://localhost:5086
 API Docs: http://localhost:5086/swagger
-🧪 Test Login
-admin@medisync.com
- / admin123
-doctor@medisync.com
- / doctor123
-🎯 Purpose
+
 
 This project is built to practice:
 
