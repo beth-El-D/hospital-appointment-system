@@ -7,18 +7,26 @@ Frontend: React + TypeScript
 Backend: ASP.NET Core Web API
 Database: SQL Server
 Auth: JWT Authentication
+
+
 ✨ What It Does
 User authentication (Admin, Doctor, Receptionist)
 Create, update, delete, and view appointments
 Filter/search appointments
 Connects React frontend with ASP.NET backend API
+
+
 ⚙️ Run the Project
 Backend
 cd MediSyncAPI
 dotnet run
+
+
 Frontend
 npm install
 npm run dev
+
+
 🔗 URLs
 Frontend: http://localhost:5173
 Backend: http://localhost:5086
