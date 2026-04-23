@@ -32,9 +32,22 @@ namespace MediSyncAPI.Controllers
         {
             try
             {
+                // Get current user info from JWT token
+                var currentUserRole = User.FindFirst("role")?.Value;
+                var currentUserFirstName = User.FindFirst("firstName")?.Value;
+                var currentUserLastName = User.FindFirst("lastName")?.Value;
+                var currentDoctorName = $"Dr. {currentUserFirstName} {currentUserLastName}";
+
                 var query = _context.Appointments.AsQueryable();
 
-                // Apply filters
+                // Role-based filtering: Doctors can only see their own appointments
+                if (currentUserRole == "Doctor")
+                {
+                    query = query.Where(a => a.DoctorName == currentDoctorName);
+                }
+                // Admin and Receptionist can see all appointments (no additional filtering needed)
+
+                // Apply other filters
                 if (!string.IsNullOrEmpty(search))
                 {
                     query = query.Where(a => 
@@ -124,6 +137,20 @@ namespace MediSyncAPI.Controllers
                         Success = false,
                         Message = $"Appointment with ID {id} not found"
                     });
+                }
+
+                // Role-based access control: Doctors can only access their own appointments
+                var currentUserRole = User.FindFirst("role")?.Value;
+                if (currentUserRole == "Doctor")
+                {
+                    var currentUserFirstName = User.FindFirst("firstName")?.Value;
+                    var currentUserLastName = User.FindFirst("lastName")?.Value;
+                    var currentDoctorName = $"Dr. {currentUserFirstName} {currentUserLastName}";
+
+                    if (appointment.DoctorName != currentDoctorName)
+                    {
+                        return Forbid(); // 403 Forbidden - user doesn't have access to this appointment
+                    }
                 }
 
                 return Ok(new ApiResponse<AppointmentDto>
@@ -337,11 +364,25 @@ namespace MediSyncAPI.Controllers
                 var appointment = await _context.Appointments.FindAsync(id);
                 if (appointment == null)
                 {
-                    return NotFound(new ApiResponse<Appointment>
+                    return NotFound(new ApiResponse<AppointmentDto>
                     {
                         Success = false,
                         Message = $"Appointment with ID {id} not found"
                     });
+                }
+
+                // Role-based access control: Doctors can only update their own appointments
+                var currentUserRole = User.FindFirst("role")?.Value;
+                if (currentUserRole == "Doctor")
+                {
+                    var currentUserFirstName = User.FindFirst("firstName")?.Value;
+                    var currentUserLastName = User.FindFirst("lastName")?.Value;
+                    var currentDoctorName = $"Dr. {currentUserFirstName} {currentUserLastName}";
+
+                    if (appointment.DoctorName != currentDoctorName)
+                    {
+                        return Forbid(); // 403 Forbidden - user doesn't have access to this appointment
+                    }
                 }
 
                 // Update appointment properties

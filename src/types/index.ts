@@ -31,6 +31,7 @@ export interface CreateAppointmentRequest {
     appointmentDate: string;
     appointmentTime: string;
     priority: 'Low' | 'Medium' | 'High' | 'Urgent';
+    status: 'Scheduled' | 'Completed' | 'Cancelled' | 'NoShow';
     notes?: string;
 }
 

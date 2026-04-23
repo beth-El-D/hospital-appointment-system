@@ -13,7 +13,7 @@ import {
 } from '@/types';
 
 // API Configuration - Update this URL to match your ASP.NET Core backend
-const API_BASE_URL = 'http://localhost:5086/api'; // Updated to match actual backend URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5086/api';
 
 class ApiService {
     private api: AxiosInstance;
